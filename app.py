@@ -8,7 +8,7 @@ menus = [
     {'name': 'Menu 2', 'description': 'This is menu 2'},
     {'name': 'Menu 3', 'description': 'This is menu 3'},
 ]
-
+ 
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
