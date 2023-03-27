@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.secret_key = "geheimeschluessel"
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://admin:1234@localhost/menu_app"
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -14,14 +14,14 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
 
-def create_table():
-    with sqlite3.connect('database.db') as con:
-        cur = con.cursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS users
-                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        username TEXT,
-                        password TEXT)''')
-        con.commit()
+#def create_table():
+    #with sqlite3.connect('database.db') as con:
+        #cur = con.cursor()
+        #cur.execute('''CREATE TABLE IF NOT EXISTS users
+                       #(id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        #username TEXT,
+                        #password TEXT)''')
+        #con.commit()
 
 with app.app_context():
     db.create_all()
@@ -82,5 +82,5 @@ def signup():
 
 if __name__ == '__main__':
     create_table()
-    app.run(debug=True)
+    app.run()
 
