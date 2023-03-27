@@ -28,9 +28,13 @@ with app.app_context():
 
 # define a list of available menus
 menus = [
-    {'name': 'Menu 1', 'description': 'This is menu 1'},
-    {'name': 'Menu 2', 'description': 'This is menu 2'},
-    {'name': 'Menu 3', 'description': 'This is menu 3'},
+    {'name': 'Dienstag', 'description': 'Mittagessen'},
+    {'name': 'Mittwoch', 'description': 'Mittagessen'},
+    {'name': 'Donnerstag', 'description': 'Mittagessen'},
+    {'name': 'Freitag', 'description': 'Mittagessen'},
+    {'name': 'Samstag', 'description': 'Mittagessen'},
+    {'name': 'Sonntag', 'description': 'Mittagessen'},
+    {'name': 'Montag', 'description': 'Mittagessen'},
 ]
 
 @app.route('/', methods=['GET', 'POST'])
