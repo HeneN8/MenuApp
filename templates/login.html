@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Registrierung</title>
 </head>
 <body>
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
-    <form method="POST">
-        <label for="username">Username:</label>
-        <input type="text" name="username" required><br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" required><br>
-        <input type="submit" value="Login">
+    <h1>Registrierung</h1>
+    <form method="post">
+        <label>Benutzername:</label>
+        <input type="text" name="username" required>
+        <br>
+        <label>Passwort:</label>
+        <input type="password" name="password" required>
+        <br>
+        <input type="submit" value="Registrieren">
     </form>
+    <a href="{{ url_for('login') }}">Anmelden</a>
 </body>
 </html>
-
