@@ -1,6 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(80), nullable=False)
+
+db.create_all()
 
 # define a list of available menus
 menus = [
@@ -8,7 +21,7 @@ menus = [
     {'name': 'Menu 2', 'description': 'This is menu 2'},
     {'name': 'Menu 3', 'description': 'This is menu 3'},
 ]
- 
+
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -17,7 +30,8 @@ def login():
         password = request.form['password']
 
         # Check if the username and password are correct
-        if username == 'admin' and password == 'password':
+        user = User.query.filter_by(username=username, password=password).first()
+        if user:
             # Redirect to the home page
             return redirect('/home')
         else:
@@ -43,8 +57,11 @@ user_menus = []
 def signup():
     # get the selected menu from the form data
     selected_menu = request.form['menu']
-    # add the selected menu to the user's menu selections
-    user_menus.append(selected_menu)
+    # add the selected menu to the user's menu selections in the database
+    user = User.query.filter_by(username=session["username"]).first()
+    user_menu = UserMenu(user_id=user.id, menu_name=selected_menu)
+    db.session.add(user_menu)
+    db.session.commit()
     # redirect the user back to the homepage
     return redirect(url_for('home'))
 
