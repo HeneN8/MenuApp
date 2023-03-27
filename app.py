@@ -2,26 +2,30 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from flask_sqlalchemy import SQLAlchemy
+import pymysql
 
 app = Flask(__name__)
 app.secret_key = "geheimeschluessel"
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://admin:1234@localhost/menu_app"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://admin:1234@localhost/menu_app"
 db = SQLAlchemy(app)
+
+global session_username
+session_username = ''
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
 
-#def create_table():
-    #with sqlite3.connect('database.db') as con:
-        #cur = con.cursor()
-        #cur.execute('''CREATE TABLE IF NOT EXISTS users
-                       #(id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        #username TEXT,
-                        #password TEXT)''')
-        #con.commit()
+# def create_table():
+#     with pymysql.connect('database.db') as con:
+#         cur = con.cursor()
+#         cur.execute('''CREATE TABLE IF NOT EXISTS users
+#                        (id INTEGER PRIMARY KEY AUTOINCREMENT,
+#                         username TEXT,
+#                         password TEXT)''')
+#         con.commit()
 
 with app.app_context():
     db.create_all()
@@ -41,11 +45,12 @@ menus = [
 def login():
     if request.method == 'POST':
         # Get the form data
-        username = request.form['username']
-        password = request.form['password']
+        session[username] = request.form['username']
+        session_username = request.form['username']
+        session[password] = request.form['password']
 
         # Check if the username and password are correct
-        user = User.query.filter_by(username=username, password=password).first()
+        user = User.query.filter_by(username=session[username], password=session[password]).first()
         if user:
             # Redirect to the home page
             return redirect('/home')
@@ -73,11 +78,12 @@ def signup():
     # get the selected menu from the form data
     selected_menu = request.form['menu']
     # add the selected menu to the user's menu selections in the database
-    user = User.query.filter_by(username=session["username"]).first()
-    user_menu = UserMenu(user_id=user.id, menu_name=selected_menu)
-    db.session.add(user_menu)
-    db.session.commit()
-    # redirect the user back to the homepage
+    user = User.query.filter_by(username=session_username).first()
+    user_menu = selected_menu
+    user_menus.append(user_menu)
+    # db.session.add(user_menu)
+    # db.session.commit()
+    # # redirect the user back to the homepage
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
