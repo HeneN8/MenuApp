@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Menu Sign-Up</title>
+    </head>
+    <body>
+        <h1>Menu Sign-Up</h1>
+        {% if user_menus %}
+        <p>Your current selections:</p>
+        <ul>
+            {% for menu in user_menus %}
+            <li>{{ menu }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <form method="post" action="{{ url_for('signup') }}">
+            <label for="menu">Select a menu:</label>
+            <select id="menu" name="menu">
+                {% for menu in menus %}
+                <option value="{{ menu['name'] }}">{{ menu['name'] }} - {{ menu['description'] }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <input type="submit" value="Sign Up">
+        </form>
+    </body>
+</html>
+
