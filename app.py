@@ -13,7 +13,8 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
 
-db.create_all()
+with app.app_context():
+    db.create_all()
 
 # define a list of available menus
 menus = [
