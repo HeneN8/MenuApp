@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
+from werkzeug.security import generate_password_hash, check_password_hash
+import sqlite3
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-
-
+app.secret_key = "geheimeschluessel"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
 db = SQLAlchemy(app)
@@ -12,6 +13,15 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
+
+def create_table():
+    with sqlite3.connect('database.db') as con:
+        cur = con.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS users
+                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        username TEXT,
+                        password TEXT)''')
+        con.commit()
 
 with app.app_context():
     db.create_all()
